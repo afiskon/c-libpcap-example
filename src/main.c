@@ -1,3 +1,8 @@
+/*
+ * eaxsniff - libpcap usage example
+ * (c) Aleksander Alekseev 2016 | http://eax.me/
+ */
+
 #include <pcap/pcap.h>
 #include <net/ethernet.h>
 #include <netinet/ip.h>
@@ -76,7 +81,8 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
     UNUSED(user);
 
     // struct ethhdr* ethernet_header = (struct ethhdr *)bytes;
-    struct iphdr* ip_header = (struct iphdr*)(bytes + sizeof(struct ethhdr));
+    struct iphdr* ip_header = (struct iphdr*)(bytes +
+                                              sizeof(struct ethhdr));
     struct sockaddr_in  source = {0},
                         dest = {0};
 
@@ -112,7 +118,8 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
     }
 
     printf("\n%s:%d -> %s:%d, %d (0x%x) bytes\n\n",
-        source_ip, source_port, dest_ip, dest_port, data_size, data_size);
+        source_ip, source_port, dest_ip, dest_port,
+        data_size, data_size);
 
     if(data_size > 0)
     {
@@ -146,10 +153,12 @@ main(int argc, char* argv[])
     }
 
     struct bpf_program filterprog;
-    res = pcap_compile(pcap, &filterprog, filter, 0, PCAP_NETMASK_UNKNOWN);
+    res = pcap_compile(pcap, &filterprog, filter, 0,
+                       PCAP_NETMASK_UNKNOWN);
     if(res != 0)
     {
-        fprintf(stderr, "pcap_compile failed: %s\n", pcap_geterr(pcap));
+        fprintf(stderr, "pcap_compile failed: %s\n",
+                pcap_geterr(pcap));
         pcap_close(pcap);
         return 1;
     }
@@ -157,7 +166,8 @@ main(int argc, char* argv[])
     res = pcap_setfilter(pcap, &filterprog);
     if(res != 0)
     {
-        fprintf(stderr, "pcap_setfilter failed: %s\n", pcap_geterr(pcap));
+        fprintf(stderr, "pcap_setfilter failed: %s\n",
+                pcap_geterr(pcap));
         pcap_close(pcap);
         return 1;
     }
