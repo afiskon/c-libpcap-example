@@ -40,9 +40,7 @@ print_data_hex(const uint8_t* data, int size)
     printf("        ");
 
     for(int i = 0; i < PRINT_BYTES_PER_LINE; i++)
-    {
         printf("%02X ", i);
-    }
 
     printf("\n\n");
 
