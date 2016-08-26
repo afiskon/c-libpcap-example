@@ -133,7 +133,7 @@ list_devs()
 	errcode = pcap_findalldevs(&alldevs, errbuff);
 	if(errcode != 0)
 	{
-		fprintf(stderr, "findalldevs - error: %s\n", errbuff);
+		fprintf(stderr, "pcap_findalldevs failed: %s\n", errbuff);
 		return;
 	}
 
