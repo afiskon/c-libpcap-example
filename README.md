@@ -14,3 +14,5 @@ autoreconf -iv
 make
 ./eaxsniff
 ```
+
+Tested on Linux and FreeBSD.

@@ -36,6 +36,9 @@ struct ethhdr
   uint16_t      h_proto;
 } __attribute__((packed));
 
+#define IP_HEADER_PROTOCOL_TCP 6
+#define IP_HEADER_PROTOCOL_UDP 17
+
 struct iphdr
 {
 

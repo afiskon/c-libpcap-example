@@ -20,9 +20,6 @@
 
 #define UNUSED(x) ((void)(x))
 
-#define IP_HEADER_PROTOCOL_TCP 6
-#define IP_HEADER_PROTOCOL_UDP 17
-
 #define PRINT_BYTES_PER_LINE 16
 
 static void
@@ -80,11 +77,13 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
     // struct ethhdr* ethernet_header = (struct ethhdr *)bytes;
     struct iphdr* ip_header = (struct iphdr*)(bytes +
                                               sizeof(struct ethhdr));
-    struct sockaddr_in  source = {0},
-                        dest = {0};
+    struct sockaddr_in  source, dest;
 
+	memset(&source, 0, sizeof(source));
+	memset(&dest, 0, sizeof(dest));
     source.sin_addr.s_addr = ip_header->saddr;
     dest.sin_addr.s_addr = ip_header->daddr;
+
     char source_ip[128];
     char dest_ip[128];
     strncpy(source_ip, inet_ntoa(source.sin_addr), sizeof(source_ip));
@@ -125,18 +124,32 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
     }
 }
 
+void
+list_devs()
+{
+	printf("list_devs() - under construction...\n");
+}
+
 int
 main(int argc, char* argv[])
 {
     int res;
 
-    if(argc <= 2)
+    if((argc < 3) && !((argc == 2) && (strcmp(argv[1], "--list-devs") == 0)))
     {
-        printf("Usage: %s device filter\n", argv[0]);
+        printf("Usage: %s device filter\n"
+               "       %s --list-devs\n",
+               argv[0], argv[0]);
         printf("Example: %s eth0 'udp src or dst port 53'\n", argv[0]);
         printf("%s\n", pcap_lib_version());
         return 1;
     }
+
+	if(argc == 2)
+	{
+		list_devs();
+		return 0;
+	}
 
     const char* device = argv[1];
     const char* filter = argv[2];
