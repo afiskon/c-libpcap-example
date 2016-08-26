@@ -16,7 +16,6 @@
 
 // TODO: support text only output, use argp
 // TODO: test in IPv6 network
-// TODO: list all available interfaces
 
 #define UNUSED(x) ((void)(x))
 
@@ -127,7 +126,28 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
 void
 list_devs()
 {
-	printf("list_devs() - under construction...\n");
+	int errcode;
+	pcap_if_t *alldevs, *currdev;
+	char errbuff[PCAP_ERRBUF_SIZE];
+
+	errcode = pcap_findalldevs(&alldevs, errbuff);
+	if(errcode != 0)
+	{
+		fprintf(stderr, "findalldevs - error: %s\n", errbuff);
+		return;
+	}
+
+	currdev = alldevs;
+
+	while(currdev)
+	{
+		printf("%s\t%s\n", currdev->name,
+			currdev->description ? currdev->description : "(no description)");
+		currdev = currdev->next;
+	}
+
+	if(alldevs)
+		pcap_freealldevs(alldevs);
 }
 
 int
