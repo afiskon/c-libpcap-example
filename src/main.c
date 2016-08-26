@@ -4,13 +4,12 @@
  */
 
 #include <pcap/pcap.h>
-#include <net/ethernet.h>
-#include <netinet/ip.h>
-#include <netinet/udp.h>
-#include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#include "include/net_headers.h"
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
