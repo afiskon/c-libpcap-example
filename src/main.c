@@ -175,7 +175,7 @@ main(int argc, char* argv[])
     const char* filter = argv[2];
     char errbuf[PCAP_ERRBUF_SIZE];
 
-    pcap_t* pcap = pcap_open_live(device, 1518, 1, 1000, errbuf);
+    pcap_t* pcap = pcap_open_live(device, 65535, 1, 100, errbuf);
     if(pcap == NULL)
     {
         fprintf(stderr, "pcap_open_live failed: %s\n", errbuf);
