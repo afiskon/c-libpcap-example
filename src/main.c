@@ -56,7 +56,7 @@ print_data_hex(const uint8_t* data, int size)
         {
             if(offset + j >= size)
                 printf(" ");
-            else if(data[offset + j] > 31 && data[offset + j] < 128)
+            else if(data[offset + j] > 31 && data[offset + j] < 127)
                 printf("%c", data[offset + j]);
             else
                 printf(".");
@@ -175,7 +175,7 @@ main(int argc, char* argv[])
     const char* filter = argv[2];
     char errbuf[PCAP_ERRBUF_SIZE];
 
-    pcap_t* pcap = pcap_open_live(device, 65536, 1, 0, errbuf);
+    pcap_t* pcap = pcap_open_live(device, 1518, 1, 1000, errbuf);
     if(pcap == NULL)
     {
         fprintf(stderr, "pcap_open_live failed: %s\n", errbuf);
