@@ -126,28 +126,28 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
 void
 list_devs()
 {
-	int errcode;
-	pcap_if_t *alldevs, *currdev;
-	char errbuff[PCAP_ERRBUF_SIZE];
+    int errcode;
+    pcap_if_t *alldevs, *currdev;
+    char errbuff[PCAP_ERRBUF_SIZE];
 
-	errcode = pcap_findalldevs(&alldevs, errbuff);
-	if(errcode != 0)
-	{
-		fprintf(stderr, "pcap_findalldevs failed: %s\n", errbuff);
-		return;
-	}
+    errcode = pcap_findalldevs(&alldevs, errbuff);
+    if(errcode != 0)
+    {
+        fprintf(stderr, "pcap_findalldevs failed: %s\n", errbuff);
+        return;
+    }
 
-	currdev = alldevs;
+    currdev = alldevs;
 
-	while(currdev)
-	{
-		printf("%s\t%s\n", currdev->name,
-			currdev->description ? currdev->description : "(no description)");
-		currdev = currdev->next;
-	}
+    while(currdev)
+    {
+        printf("%s\t%s\n", currdev->name,
+            currdev->description ? currdev->description : "(no description)");
+        currdev = currdev->next;
+    }
 
-	if(alldevs)
-		pcap_freealldevs(alldevs);
+    if(alldevs)
+        pcap_freealldevs(alldevs);
 }
 
 int
@@ -165,11 +165,11 @@ main(int argc, char* argv[])
         return 1;
     }
 
-	if(argc == 2)
-	{
-		list_devs();
-		return 0;
-	}
+    if(argc == 2)
+    {
+        list_devs();
+        return 0;
+    }
 
     const char* device = argv[1];
     const char* filter = argv[2];
