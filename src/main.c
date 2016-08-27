@@ -142,7 +142,9 @@ list_devs()
     while(currdev)
     {
         printf("%s\t%s\n", currdev->name,
-            currdev->description ? currdev->description : "(no description)");
+            currdev->description ? currdev->description :
+                                   "(no description)"
+        );
         currdev = currdev->next;
     }
 
