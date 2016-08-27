@@ -67,7 +67,7 @@ struct iphdr
   uint16_t check;
   uint32_t saddr;
   uint32_t daddr;
-};
+} __attribute__((packed));
 
 struct tcphdr
 {
@@ -110,7 +110,7 @@ struct tcphdr
   uint16_t window;
   uint16_t check;
   uint16_t urg_ptr;
-};
+} __attribute__((packed));
 
 struct udphdr
 {
@@ -118,6 +118,6 @@ struct udphdr
   uint16_t dest;
   uint16_t len;
   uint16_t check;
-};
+} __attribute__((packed));
 
 #endif /* NET_HEADERS_H */
