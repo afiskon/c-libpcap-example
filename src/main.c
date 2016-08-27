@@ -78,8 +78,8 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
                                               sizeof(struct ethhdr));
     struct sockaddr_in  source, dest;
 
-	memset(&source, 0, sizeof(source));
-	memset(&dest, 0, sizeof(dest));
+    memset(&source, 0, sizeof(source));
+    memset(&dest, 0, sizeof(dest));
     source.sin_addr.s_addr = ip_header->saddr;
     dest.sin_addr.s_addr = ip_header->daddr;
 
