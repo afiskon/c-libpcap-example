@@ -157,7 +157,8 @@ main(int argc, char* argv[])
 {
     int res;
 
-    if((argc < 3) && !((argc == 2) && (strcmp(argv[1], "--list-devs") == 0)))
+    if((argc < 3) && !((argc == 2) && 
+                       (strcmp(argv[1], "--list-devs") == 0)))
     {
         printf("Usage: %s device filter\n"
                "       %s --list-devs\n",
