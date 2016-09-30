@@ -4,25 +4,20 @@
  */
 
 #include <pcap/pcap.h>
-#include <net/ethernet.h>
-#include <netinet/ip.h>
-#include <netinet/udp.h>
-#include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#include "include/net_headers.h"
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 // TODO: support text only output, use argp
 // TODO: test in IPv6 network
-// TODO: list all available interfaces
 
 #define UNUSED(x) ((void)(x))
-
-#define IP_HEADER_PROTOCOL_TCP 6
-#define IP_HEADER_PROTOCOL_UDP 17
 
 #define PRINT_BYTES_PER_LINE 16
 
@@ -58,7 +53,7 @@ print_data_hex(const uint8_t* data, int size)
         {
             if(offset + j >= size)
                 printf(" ");
-            else if(data[offset + j] > 31 && data[offset + j] < 128)
+            else if(data[offset + j] > 31 && data[offset + j] < 127)
                 printf("%c", data[offset + j]);
             else
                 printf(".");
@@ -78,11 +73,13 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
     // struct ethhdr* ethernet_header = (struct ethhdr *)bytes;
     struct iphdr* ip_header = (struct iphdr*)(bytes +
                                               sizeof(struct ethhdr));
-    struct sockaddr_in  source = {0},
-                        dest = {0};
+    struct sockaddr_in  source, dest;
 
+    memset(&source, 0, sizeof(source));
+    memset(&dest, 0, sizeof(dest));
     source.sin_addr.s_addr = ip_header->saddr;
     dest.sin_addr.s_addr = ip_header->daddr;
+
     char source_ip[128];
     char dest_ip[128];
     strncpy(source_ip, inet_ntoa(source.sin_addr), sizeof(source_ip));
@@ -123,24 +120,62 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
     }
 }
 
+void
+list_devs()
+{
+    int errcode;
+    pcap_if_t *alldevs, *currdev;
+    char errbuff[PCAP_ERRBUF_SIZE];
+
+    errcode = pcap_findalldevs(&alldevs, errbuff);
+    if(errcode != 0)
+    {
+        fprintf(stderr, "pcap_findalldevs failed: %s\n", errbuff);
+        return;
+    }
+
+    currdev = alldevs;
+
+    while(currdev)
+    {
+        printf("%s\t%s\n", currdev->name,
+            currdev->description ? currdev->description :
+                                   "(no description)"
+        );
+        currdev = currdev->next;
+    }
+
+    if(alldevs)
+        pcap_freealldevs(alldevs);
+}
+
 int
 main(int argc, char* argv[])
 {
     int res;
 
-    if(argc <= 2)
+    if((argc < 3) && !((argc == 2) && 
+                       (strcmp(argv[1], "--list-devs") == 0)))
     {
-        printf("Usage: %s device filter\n", argv[0]);
+        printf("Usage: %s device filter\n"
+               "       %s --list-devs\n",
+               argv[0], argv[0]);
         printf("Example: %s eth0 'udp src or dst port 53'\n", argv[0]);
         printf("%s\n", pcap_lib_version());
         return 1;
+    }
+
+    if(argc == 2)
+    {
+        list_devs();
+        return 0;
     }
 
     const char* device = argv[1];
     const char* filter = argv[2];
     char errbuf[PCAP_ERRBUF_SIZE];
 
-    pcap_t* pcap = pcap_open_live(device, 65536, 1, 0, errbuf);
+    pcap_t* pcap = pcap_open_live(device, 65535, 1, 100, errbuf);
     if(pcap == NULL)
     {
         fprintf(stderr, "pcap_open_live failed: %s\n", errbuf);
