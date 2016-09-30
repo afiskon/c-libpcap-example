@@ -29,9 +29,6 @@
 static void
 print_data_hex(const uint8_t* data, int size)
 {
-    UNUSED(data);
-    UNUSED(size);
-
     int offset = 0;
     int nlines = size / PRINT_BYTES_PER_LINE;
     if(nlines * PRINT_BYTES_PER_LINE < size)
