@@ -82,8 +82,12 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
 
     char source_ip[128];
     char dest_ip[128];
-    strncpy(source_ip, inet_ntoa(source.sin_addr), sizeof(source_ip));
-    strncpy(dest_ip, inet_ntoa(dest.sin_addr), sizeof(dest_ip));
+
+    strncpy(source_ip, inet_ntoa(source.sin_addr), sizeof(source_ip)-1);
+    source_ip[sizeof(source_ip)-1] = '\0';
+
+    strncpy(dest_ip, inet_ntoa(dest.sin_addr), sizeof(dest_ip)-1);
+    dest_ip[sizeof(dest_ip)-1] = '\0';
 
     int source_port = 0;
     int dest_port = 0;
