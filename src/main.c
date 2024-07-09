@@ -113,12 +113,12 @@ handle_packet(uint8_t* user, const struct pcap_pkthdr *hdr,
                         ip_header_size - sizeof(struct udphdr);
     }
 
-    printf("\n%s:%d -> %s:%d, %d (0x%x) bytes\n\n",
-        source_ip, source_port, dest_ip, dest_port,
-        data_size, data_size);
-
     if(data_size > 0)
     {
+        printf("\n%s:%d -> %s:%d, %d (0x%x) bytes\n\n",
+            source_ip, source_port, dest_ip, dest_port,
+            data_size, data_size);
+
         int headers_size = hdr->len - data_size;
         print_data_hex(bytes + headers_size, data_size);
     }
